@@ -1,6 +1,6 @@
 name = "LieTypes"
 uuid = "0c67e648-4d35-4355-90e7-ed0010f24841"
-authors = ["Joan Aguilar <j.aguilarmayans@gmail.com> and contributors"]
+authors = ["Joan Aguilar Mayans <j.aguilarmayans@gmail.com> and contributors"]
 version = "0.1.0"
 
 [compat]
