@@ -26,12 +26,12 @@ end
 
 @testset "one" begin
     for n = numbers
-        @test one(LieScalar(n)).s == 1
+        @test one(LieScalar(n)).s == 0
     end
 
-    @test one(LieScalar).s == 1
+    @test one(LieScalar).s == 0
     for T = (Int64, Float64, Complex)
-        @test one(LieScalar{T}).s == 1
+        @test one(LieScalar{T}).s == 0
     end
 end
 
@@ -42,6 +42,13 @@ end
 end
 
 @testset "multiplication" begin
+    for n = numbers
+        @test (one(LieScalar(n)) * LieScalar(n)).s == n
+        @test (LieScalar(n) * one(LieScalar(n))).s == n
+        @test (one(LieScalar) * LieScalar(n)).s == n
+        @test (LieScalar(n) * one(LieScalar)).s == n
+    end
+
     for p = pairs
         n1, n2 = p
         l1, l2 = LieScalar(n1), LieScalar(n2)

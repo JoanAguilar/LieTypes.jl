@@ -4,8 +4,8 @@ end
 
 # Constructors
 from_number(T::Type{<:LieScalar}, n::Number) = T(n)
-Base.one(l::T) where {T<:LieScalar} = T(1)
-Base.one(T::Type{<:LieScalar}) = T(1)
+Base.one(l::T) where {T<:LieScalar} = T(0)
+Base.one(T::Type{<:LieScalar}) = T(0)
 
 # Selectors
 number(l::LieScalar) = l.s
