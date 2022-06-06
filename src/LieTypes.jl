@@ -2,6 +2,9 @@ module LieTypes
 
 import LinearAlgebra as LA
 
+# Support types and methods
+export DualComplex, scalar, vector, dual, iscomplex
+
 # Types
 export LieGroup
 export LieScalar, LieVector, SO2
@@ -15,6 +18,7 @@ export number, array, rotmat
 
 # Operators include '*', 'inv', 'exp', and 'log', from Base.
 
+include("numbers/dualcomplex.jl")
 include("abstract.jl")
 include("scalar.jl")
 include("vector.jl")
