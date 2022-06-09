@@ -52,5 +52,9 @@ rotmat(q::SO2) = [
 # Operators
 Base.:*(q::SO2, p::SO2) = SO2(q.c * p.c)
 Base.inv(q::T) where {T<:SO2} = T(conj(q.c))
+# The Lie algebra is represented as a scalar array, containing the angle of the
+# transformation in the range [-π, π].The choice of a scalar array rather than
+# a scalar is to keep type consistency with other Lie algebras (all represented
+# by arrays).
 Base.exp(T::Type{<:SO2}, v::Array{<:Real, 0}) = from_angle(T, v[])
 Base.log(q::SO2) = fill(angle(q.c))
