@@ -157,3 +157,64 @@ end
     test_values(DualComplex(1, 2, 3, 4) * one(DualComplex), 1, 2, 3, 4)
     test_values(one(DualComplex) * DualComplex(1, 2, 3, 4), 1, 2, 3, 4)
 end
+
+@testset "division" begin
+    @test DualComplex(1, 2, 3, 4) / DualComplex(5, 6, 7, 8) ≈
+        DualComplex(1, 2, 3, 4) * inv(DualComplex(5, 6, 7, 8))
+    @test 1 / DualComplex(2, 3, 4, 5) ≈ inv(DualComplex(2, 3, 4, 5))
+    test_values(DualComplex(1, 2, 3, 4) / 5, 1/5, 2/5, 3/5, 4/5)
+    @test Complex(1, 2) / DualComplex(3, 4, 5, 6) ≈
+        Complex(1, 2) * inv(DualComplex(3, 4, 5, 6))
+    @test DualComplex(1, 2, 3, 4) / Complex(5, 6) ≈
+        DualComplex(1, 2, 3, 4) * inv(DualComplex(Complex(5, 6)))
+    test_values(
+        DualComplex(1, 2, 3, 4) / zero(DualComplex),
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        comp=isequal)
+    test_values(zero(DualComplex) / DualComplex(1, 2, 3, 4), 0, 0, 0, 0)
+    test_values(DualComplex(1, 2, 3, 4) / one(DualComplex), 1, 2, 3, 4)
+    @test one(DualComplex) / DualComplex(1, 2, 3, 4) ≈
+        inv(DualComplex(1, 2, 3, 4))
+
+    @test DualComplex(1, 2, 3, 4) \ DualComplex(5, 6, 7, 8) ≈
+        DualComplex(5, 6, 7, 8) / DualComplex(1, 2, 3, 4)
+    @test 1 \ DualComplex(2, 3, 4, 5) ≈ DualComplex(2, 3, 4, 5)
+    @test DualComplex(1, 2, 3, 4) \ 5 ≈ 5 / DualComplex(1, 2, 3, 4)
+    @test Complex(1, 2) \ DualComplex(3, 4, 5, 6) ≈
+        DualComplex(3, 4, 5, 6) / Complex(1, 2)
+    @test DualComplex(1, 2, 3, 4) \ Complex(5, 6) ≈
+        Complex(5, 6) / DualComplex(1, 2, 3, 4)
+    @test DualComplex(1, 2, 3, 4) \ zero(DualComplex) == zero(DualComplex)
+    test_values(
+        zero(DualComplex) \ DualComplex(1, 2, 3, 4),
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        comp=isequal)
+    @test DualComplex(1, 2, 3, 4) \ one(DualComplex) ≈
+        inv(DualComplex(1, 2, 3, 4))
+    @test one(DualComplex) \ DualComplex(1, 2, 3, 4) == DualComplex(1, 2, 3, 4)
+end
+
+@testset "==" begin
+    @test DualComplex(1, 2, 3, 4) == DualComplex(1, 2, 3, 4)
+    @test DualComplex(1, 2, 3, 4) != DualComplex(5, 2, 3, 4)
+    @test DualComplex(1, 2, 3, 4) != DualComplex(1, 5, 3, 4)
+    @test DualComplex(1, 2, 3, 4) != DualComplex(1, 2, 5, 4)
+    @test DualComplex(1, 2, 3, 4) != DualComplex(1, 2, 3, 5)
+end
+
+@testset "norm" begin
+    @test LA.norm(DualComplex(1, 2, 3, 4)) == abs(DualComplex(1, 2, 3, 4))
+    @test LA.norm(DualComplex(1, 2, 3, 4), 1) == abs(DualComplex(1, 2, 3, 4))
+    @test LA.norm(DualComplex(1, 2, 3, 4), 3) == abs(DualComplex(1, 2, 3, 4))
+end
+
+@testset "normalize" begin
+    @test LA.norm(LA.normalize(DualComplex(1, 2, 3, 4))) ≈ 1
+    @test LA.norm(LA.normalize(DualComplex(5, 6, 7, 8))) ≈ 1
+end
