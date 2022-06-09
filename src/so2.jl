@@ -2,7 +2,7 @@ struct SO2{T<:Complex} <: LieGroup
     c::T
 end
 
-# Contsructors
+# Constructors
 function from_complex(T::Type{<:SO2}, c::Complex; checks::Bool=true)
     if checks && !(abs2(c) ≈ 1)
         throw(
