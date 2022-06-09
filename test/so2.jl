@@ -57,13 +57,13 @@ end
 
 @testset "one" begin
     for θ = angles
-        @test one(from_angle(SO2, θ)).c == Complex(1)
+        @test one(from_angle(SO2, θ)).c == one(Complex)
     end
 
-    @test one(SO2).c == Complex(1)
-    @test one(SO2{Complex}).c == Complex(1)
+    @test one(SO2).c == one(Complex)
+    @test one(SO2{Complex}).c == one(Complex)
     for T = (Int64, Float64)
-        @test one(SO2{Complex{T}}).c == Complex(1)
+        @test one(SO2{Complex{T}}).c == one(Complex)
     end
 end
 

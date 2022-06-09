@@ -39,8 +39,10 @@ function from_rotmat(T::Type{<:SO2}, r::Matrix{<:Real}; checks::Bool=true)
     return T(r[1, 1] + im * r[2, 1])
 end
 
-Base.one(q::T) where {T<:SO2} = T(Complex(1))
-Base.one(T::Type{<:SO2}) = T(Complex(1))
+Base.one(q::SO2{Complex{T}}) where {T<:Number} = SO2{Complex{T}}(
+    Complex(one(T)))
+Base.one(T::Type{<:SO2}) = T(one(Complex))
+Base.one(T::Type{SO2{Complex{R}}}) where {R<:Number} = T(Complex(one(R)))
 
 # Selectors
 Base.complex(q::SO2) = q.c
