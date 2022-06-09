@@ -88,6 +88,8 @@ Base.:\(u::Real, v::DualComplex) = /(v, u)
 Base.:\(u::DualComplex, v::Real) = /(v, u)
 Base.:\(u::Complex, v::DualComplex) = /(v, u)
 Base.:\(u::DualComplex, v::Complex) = /(v, u)
+Base.:(==)(u::DualComplex, v::DualComplex) =
+    u.a == v.a && u.b == v.b && u.c == v.c && u.d == v.d
 # Using `abs` as `norm`, and ignoring `p`, matches the behavior of `Complex`.
 LA.norm(u::DualComplex, p::Real=2) = abs(u)
 LA.normalize(u::DualComplex) = u / abs(u)
