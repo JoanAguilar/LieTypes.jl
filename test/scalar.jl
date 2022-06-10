@@ -18,9 +18,9 @@ pairs = (
     end
 end
 
-@testset "from_number" begin
+@testset "lie_scalar_from_number" begin
     for n = numbers
-        @test from_number(LieScalar, n).s == n
+        @test lie_scalar_from_number(n).s == n
     end
 end
 

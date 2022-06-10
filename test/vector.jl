@@ -21,9 +21,9 @@ pairs = (
     end
 end
 
-@testset "from_array" begin
+@testset "lie_vector_from_array" begin
     for a = arrays
-        @test from_array(LieVector, a).a == a
+        @test lie_vector_from_array(a).a == a
     end
 end
 

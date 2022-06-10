@@ -3,7 +3,7 @@ struct LieVector{T<:Array} <: LieGroup
 end
 
 # Constructors
-from_array(T::Type{<:LieVector}, a::Array) = T(a)
+lie_vector_from_array(a::Array) = LieVector(a)
 Base.one(l::T) where {T<:LieVector} = T(zero(l.a))
 
 # Selectors

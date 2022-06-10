@@ -3,7 +3,7 @@ struct LieScalar{T<:Number} <: LieGroup
 end
 
 # Constructors
-from_number(T::Type{<:LieScalar}, n::Number) = T(n)
+lie_scalar_from_number(n::Number) = LieScalar(n)
 Base.one(l::T) where {T<:LieScalar} = T(0)
 Base.one(T::Type{<:LieScalar}) = T(0)
 

@@ -3,17 +3,17 @@ struct SE2{T<:DualComplex} <: LieGroup
 end
 
 # Constructors
-function from_dual_complex(T::Type{<:SE2}, dc::DualComplex; checks::Bool=true)
+function se2_from_dual_complex(dc::DualComplex; checks::Bool=true)
     if checks && !(abs2(dc) ≈ 1)
         throw(
             DomainError(
                 dc,
                 "Dual Complex number must have a norm of 1, got $(abs(dc))."))
     end
-    return T(dc)
+    return SE2(dc)
 end
 
-function from_matrix(T::Type{<:SE2}, t::Matrix{<:Real}; checks::Bool=true)
+function se2_from_matrix(t::Matrix{<:Real}; checks::Bool=true)
     if checks
         if size(t) != (3, 3)
             throw(
@@ -27,12 +27,11 @@ function from_matrix(T::Type{<:SE2}, t::Matrix{<:Real}; checks::Bool=true)
                     "Matrix last row must be [0, 0, 1], got $(t[3, :])."))
         end
     end
-    r = from_rotmat(SO2, t[1:2, 1:2], checks=checks)
-    return from_so2_disp(SE2, r, t[1:2, 3], checks=checks)
+    r = so2_from_rotmat(t[1:2, 1:2], checks=checks)
+    return se2_from_so2_disp(r, t[1:2, 3], checks=checks)
 end
 
-function from_so2_disp(
-            T::Type{<:SE2},
+function se2_from_so2_disp(
             r::SO2,
             d::Vector{R};
             checks::Bool=true
@@ -47,8 +46,8 @@ function from_so2_disp(
     chθ = cos(θ/2)
     shθ = sin(θ/2)
     dcr = DualComplex(chθ, shθ, shθ, shθ)
-    dcd = DualComplex{R}(one(R), zero(R), -d[2], d[1])
-    return T(dcd * dcr)
+    dcd = DualComplex(one(R), zero(R), -d[2], d[1])
+    return SE2(dcd * dcr)
 end
 
 Base.one(q::SE2{DualComplex{T}}) where {T<:Number} = SE2{DualComplex{T}}(
@@ -67,7 +66,7 @@ function matrix(q::SE2)
     return vcat(hcat(rotmat(so2(q)), [t.d; -t.c]), [0 0 1])
 end
 
-so2(q::SE2) = from_complex(SO2, complex(q.dc) ^ 2)
+so2(q::SE2) = so2_from_complex(complex(q.dc) ^ 2)
 
 function disp(q::SE2)
     dc = q.dc
@@ -82,9 +81,8 @@ Base.inv(q::T) where {T<:SE2} = T(conj(q.dc))
 # The Lie algebra is represented as a three-element vector, containing one
 # element corresponding to the rotation angle (in the range [-π, π]), and two
 # elements corresponding to the translation vector, in this order.
-Base.exp(T::Type{<:SE2}, v::Vector{<:Real}) = from_so2_disp(
-    SE2,
-    from_angle(SO2, v[1]),
+Base.exp(T::Type{<:SE2}, v::Vector{<:Real}) = se2_from_so2_disp(
+    so2_from_angle(v[1]),
     v[2:3],
     checks=false)
 Base.log(q::SE2) = [angle(so2(q)), disp(q)...]

@@ -64,43 +64,43 @@ matrices = (good_matrices..., bad_matrices...)
     end
 end
 
-@testset "from_dual_complex" begin
+@testset "se2_from_dual_complex" begin
     for dc = dual_complexes
-        @test from_dual_complex(SE2, dc, checks=false).dc == dc
+        @test se2_from_dual_complex(dc, checks=false).dc == dc
     end
 
     for dc = good_dual_complexes
-        @test from_dual_complex(SE2, dc).dc == dc
+        @test se2_from_dual_complex(dc).dc == dc
     end
 
     for dc = bad_dual_complexes
-        @test_throws DomainError from_dual_complex(SE2, dc)
+        @test_throws DomainError se2_from_dual_complex(dc)
     end
 end
 
-@testset "from_matrix" begin
+@testset "se2_from_matrix" begin
     for mat in matrices
-        @test_nowarn from_matrix(SE2, mat, checks=false)
+        @test_nowarn se2_from_matrix(mat, checks=false)
     end
 
     for ad in angles_disps
         θ, d = ad
         dc = angle_disp_to_dual_complex(θ, d)
         mat = angle_disp_to_matrix(θ, d)
-        @test abs(from_matrix(SE2, mat).dc - dc) ≈ 0 atol=1e-16
+        @test abs(se2_from_matrix(mat).dc - dc) ≈ 0 atol=1e-16
     end
 
     for mat in bad_matrices
-        @test_throws DomainError from_matrix(SE2, mat)
+        @test_throws DomainError se2_from_matrix(mat)
     end
 end
 
-@testset "from_so2_disp" begin
+@testset "se2_from_so2_disp" begin
     for mat in matrices
         rotmat = mat[1:2, 1:2]
-        r = from_rotmat(SO2, rotmat, checks=false)
+        r = so2_from_rotmat(rotmat, checks=false)
         disp = mat[1:2, 3]
-        @test_nowarn from_so2_disp(SE2, r, disp, checks=false)
+        @test_nowarn se2_from_so2_disp(r, disp, checks=false)
     end
 
     for ad in angles_disps
@@ -108,19 +108,19 @@ end
         dc = angle_disp_to_dual_complex(θ, disp)
         mat = angle_disp_to_matrix(θ, disp)
         rotmat = mat[1:2, 1:2]
-        r = from_rotmat(SO2, rotmat, checks=false)
-        @test abs(from_so2_disp(SE2, r, disp).dc - dc) ≈ 0 atol=1e-16
+        r = so2_from_rotmat(rotmat, checks=false)
+        @test abs(se2_from_so2_disp(r, disp).dc - dc) ≈ 0 atol=1e-16
     end
 
-    r = from_angle(SO2, 0)
+    r = so2_from_angle(0)
     for disp = ([1], [1, 2, 3], [1, 2, 3, 4])
-        @test_throws DomainError from_so2_disp(SE2, r, disp)
+        @test_throws DomainError se2_from_so2_disp(r, disp)
     end
 end
 
 @testset "one" begin
     for dc = good_dual_complexes
-        @test one(from_dual_complex(SE2, dc)).dc == one(DualComplex)
+        @test one(se2_from_dual_complex(dc)).dc == one(DualComplex)
     end
 
     @test one(SE2).dc == one(DualComplex) 
@@ -138,13 +138,13 @@ end
 
 @testset "matrix" begin
     for mat = good_matrices
-        @test matrix(from_matrix(SE2, mat)) ≈ mat
+        @test matrix(se2_from_matrix(mat)) ≈ mat
     end
 end
 
 @testset "so2" begin
     for mat = good_matrices
-        @test rotmat(so2(from_matrix(SE2, mat))) ≈ mat[1:2, 1:2]
+        @test rotmat(so2(se2_from_matrix(mat))) ≈ mat[1:2, 1:2]
     end
 end
 
@@ -152,7 +152,7 @@ end
     for ad = angles_disps
         d = ad.disp
         dc = angle_disp_to_dual_complex(ad.angle, ad.disp)
-        @test disp(from_dual_complex(SE2, dc)) ≈ d atol=1e-15
+        @test disp(se2_from_dual_complex(dc)) ≈ d atol=1e-15
     end
 end
 
@@ -161,8 +161,8 @@ end
         θ, d = ad
         m = angle_disp_to_matrix(θ, d)
         dc = angle_disp_to_dual_complex(θ, d)
-        @test matrix(one(SE2) * from_dual_complex(SE2, dc)) ≈ m
-        @test matrix(from_dual_complex(SE2, dc) * one(SE2)) ≈ m
+        @test matrix(one(SE2) * se2_from_dual_complex(dc)) ≈ m
+        @test matrix(se2_from_dual_complex(dc) * one(SE2)) ≈ m
     end
 
     for n = 1:length(angles_disps) - 1
@@ -173,8 +173,8 @@ end
         dc2 = angle_disp_to_dual_complex(θ2, d2)
         m1 = angle_disp_to_matrix(θ1, d1)
         m2 = angle_disp_to_matrix(θ2, d2)
-        l1 = from_matrix(SE2, m1)
-        l2 = from_matrix(SE2, m2)
+        l1 = se2_from_matrix(m1)
+        l2 = se2_from_matrix(m2)
         @test matrix(l1 * l2) ≈ m1 * m2
         @test matrix(l2 * l1) ≈ m2 * m1
     end
@@ -182,7 +182,7 @@ end
 
 @testset "inverse" begin
     for dc = good_dual_complexes
-        l = from_dual_complex(SE2, dc)
+        l = se2_from_dual_complex(dc)
         @test inv(l).dc == conj(dc)
         @test matrix(inv(l) * l) ≈ LA.I
         @test matrix(l * inv(l)) ≈ LA.I
@@ -210,7 +210,7 @@ end
 
     for ad = angles_disps
         dc = angle_disp_to_dual_complex(ad.angle, ad.disp)
-        l = from_dual_complex(SE2, dc)
+        l = se2_from_dual_complex(dc)
         test_log(l, ad.angle, ad.disp)
         @test dual_complex(exp(SE2, log(l))) ≈ dc
     end

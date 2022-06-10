@@ -3,7 +3,7 @@ module LieTypes
 import LinearAlgebra as LA
 
 # Support types and methods
-export DualComplex, scalar, vector, dual, iscomplex
+export DualComplex, scalar, abcd, vector, dual, iscomplex
 
 # Types
 export LieGroup
@@ -11,14 +11,14 @@ export LieScalar, LieVector, SO2, SE2
 
 # Contsructors
 export
-    from_number,
-    from_array,
-    from_complex,
-    from_angle,
-    from_rotmat,
-    from_dual_complex,
-    from_matrix,
-    from_so2_disp
+    lie_scalar_from_number,
+    lie_vector_from_array,
+    so2_from_complex,
+    so2_from_angle,
+    so2_from_rotmat,
+    se2_from_dual_complex,
+    se2_from_matrix,
+    se2_from_so2_disp
 # The use of standard constructors is discouraged.
 
 # Selectors

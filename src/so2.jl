@@ -3,19 +3,19 @@ struct SO2{T<:Complex} <: LieGroup
 end
 
 # Constructors
-function from_complex(T::Type{<:SO2}, c::Complex; checks::Bool=true)
+function so2_from_complex(c::Complex; checks::Bool=true)
     if checks && !(abs2(c) ≈ 1)
         throw(
             DomainError(
                 c,
                 "Complex number must have a norm of 1, got $(abs(c))."))
     end
-    return T(c)
+    return SO2(c)
 end
 
-from_angle(T::Type{<:SO2}, θ::Real) = T(cos(θ) + im * sin(θ))
+so2_from_angle(θ::Real) = SO2(cos(θ) + im * sin(θ))
 
-function from_rotmat(T::Type{<:SO2}, r::Matrix{<:Real}; checks::Bool=true)
+function so2_from_rotmat(r::Matrix{<:Real}; checks::Bool=true)
     if checks
         if size(r) != (2, 2)
             throw(
@@ -36,7 +36,7 @@ function from_rotmat(T::Type{<:SO2}, r::Matrix{<:Real}; checks::Bool=true)
                     "inverse."))
         end
     end
-    return T(r[1, 1] + im * r[2, 1])
+    return SO2(r[1, 1] + im * r[2, 1])
 end
 
 Base.one(q::SO2{Complex{T}}) where {T<:Number} = SO2{Complex{T}}(
@@ -58,5 +58,5 @@ Base.inv(q::T) where {T<:SO2} = T(conj(q.c))
 # transformation in the range [-π, π].The choice of a scalar array rather than
 # a scalar is to keep type consistency with other Lie algebras (all represented
 # by arrays).
-Base.exp(T::Type{<:SO2}, v::Array{<:Real, 0}) = from_angle(T, v[])
+Base.exp(T::Type{<:SO2}, v::Array{<:Real, 0}) = so2_from_angle(v[])
 Base.log(q::SO2) = fill(angle(q.c))
