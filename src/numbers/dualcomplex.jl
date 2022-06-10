@@ -39,9 +39,10 @@ Base.one(dc::T) where {T<:DualComplex} = one(T)
 scalar(dc::DualComplex) = dc.a
 Base.real(dc::DualComplex) = scalar(dc)
 Base.complex(dc::DualComplex{T}) where {T<:Number} = Complex{T}(dc.a, dc.b)
+abcd(dc::DualComplex) = (dc.a, dc.b, dc.c, dc.d)
 Base.imag(dc::DualComplex) = dc.b
 vector(dc::DualComplex) = [dc.b, dc.c, dc.d]
-dual(dc::DualComplex) = [dc.c, dc.d]
+dual(dc::DualComplex) = (dc.c, dc.d)
 
 # Operators
 Base.abs2(dc::DualComplex) = abs2(dc.a) + abs2(dc.b)

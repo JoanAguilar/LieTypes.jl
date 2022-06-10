@@ -54,6 +54,12 @@ end
     @test complex(DualComplex(2, 3, 4, 5)) == Complex(2, 3)
 end
 
+@testset "abcd" begin
+    @test abcd(zero(DualComplex)) == (0, 0, 0, 0)
+    @test abcd(one(DualComplex)) == (1, 0, 0, 0)
+    @test abcd(DualComplex(2, 3, 4, 5)) == (2, 3, 4, 5)
+end
+
 @testset "imag" begin
     @test imag(zero(DualComplex)) == 0
     @test imag(one(DualComplex)) == 0
@@ -67,9 +73,9 @@ end
 end
 
 @testset "dual" begin
-    @test dual(zero(DualComplex)) == [0, 0]
-    @test dual(one(DualComplex)) == [0, 0]
-    @test dual(DualComplex(2, 3, 4, 5)) == [4, 5]
+    @test dual(zero(DualComplex)) == (0, 0)
+    @test dual(one(DualComplex)) == (0, 0)
+    @test dual(DualComplex(2, 3, 4, 5)) == (4, 5)
 end
 
 @testset "abs2" begin
