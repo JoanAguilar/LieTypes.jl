@@ -43,14 +43,14 @@ abcd(dc::DualComplex) = (dc.a, dc.b, dc.c, dc.d)
 Base.imag(dc::DualComplex) = dc.b
 vector(dc::DualComplex) = [dc.b, dc.c, dc.d]
 dual(dc::DualComplex) = (dc.c, dc.d)
+Base.isreal(dc::DualComplex) = dc.b == 0 && dc.c == 0 && dc.d == 0
+iscomplex(dc::DualComplex) = dc.c == 0 && dc.d == 0
 
 # Operators
 Base.abs2(dc::DualComplex) = abs2(dc.a) + abs2(dc.b)
 Base.abs(dc::DualComplex) = sqrt(abs2(dc))
 Base.conj(dc::T) where {T<:DualComplex} = T(dc.a, -dc.b, -dc.c, -dc.d)
 Base.inv(dc::DualComplex) = conj(dc) / abs2(dc)
-Base.isreal(dc::DualComplex) = dc.b == 0 && dc.c == 0 && dc.d == 0
-iscomplex(dc::DualComplex) = dc.c == 0 && dc.d == 0
 Base.:+(u::DualComplex, v::DualComplex) = DualComplex(
     u.a + v.a,
     u.b + v.b,

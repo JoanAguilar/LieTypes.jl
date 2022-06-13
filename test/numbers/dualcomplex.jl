@@ -78,6 +78,24 @@ end
     @test dual(DualComplex(2, 3, 4, 5)) == (4, 5)
 end
 
+@testset "isreal" begin
+    @test isreal(zero(DualComplex))
+    @test isreal(one(DualComplex))
+    @test !isreal(DualComplex(2, 3, 0, 0))
+    @test !isreal(DualComplex(2, 0, 4, 0))
+    @test !isreal(DualComplex(2, 0, 0, 5))
+    @test !isreal(DualComplex(2, 3, 4, 5))
+end
+
+@testset "iscomplex" begin
+    @test iscomplex(zero(DualComplex))
+    @test iscomplex(one(DualComplex))
+    @test iscomplex(DualComplex(2, 3, 0, 0))
+    @test !iscomplex(DualComplex(2, 3, 4, 0))
+    @test !iscomplex(DualComplex(2, 3, 0, 5))
+    @test !iscomplex(DualComplex(2, 3, 4, 5))
+end
+
 @testset "abs2" begin
     @test abs2(zero(DualComplex)) == 0
     @test abs2(one(DualComplex)) == 1
@@ -100,20 +118,6 @@ end
     test_values(inv(zero(DualComplex)), NaN, NaN, NaN, NaN, comp=isequal)
     test_values(inv(one(DualComplex)), 1, 0, 0, 0)
     test_values(inv(DualComplex(2, 3, 4, 5)), 2/13, -3/13, -4/13, -5/13)
-end
-
-@testset "isreal" begin
-    @test isreal(zero(DualComplex))
-    @test isreal(one(DualComplex))
-    @test !isreal(DualComplex(2, 3, 0, 0))
-    @test !isreal(DualComplex(2, 3, 4, 5))
-end
-
-@testset "iscomplex" begin
-    @test iscomplex(zero(DualComplex))
-    @test iscomplex(one(DualComplex))
-    @test iscomplex(DualComplex(2, 3, 0, 0))
-    @test !iscomplex(DualComplex(2, 3, 4, 5))
 end
 
 @testset "addition" begin
