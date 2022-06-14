@@ -10,4 +10,5 @@ import LinearAlgebra as LA
     @testset "LieVector" begin include("vector.jl") end
     @testset "SO2" begin include("so2.jl") end
     @testset "SE2" begin include("se2.jl") end
+    @testset "SO3" begin include("so3.jl") end
 end
