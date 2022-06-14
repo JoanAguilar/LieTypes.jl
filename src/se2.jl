@@ -79,8 +79,8 @@ end
 Base.:*(q::SE2, p::SE2) = SE2(q.dc * p.dc)
 Base.inv(q::T) where {T<:SE2} = T(conj(q.dc))
 # The Lie algebra is represented as a three-element vector, containing one
-# element corresponding to the rotation angle (in the range [-π, π]), and two
-# elements corresponding to the translation vector, in this order.
+# element corresponding to the rotation angle, and two elements corresponding
+# to the translation vector, in this order.
 Base.exp(T::Type{<:SE2}, v::Vector{<:Real}) = se2_from_so2_disp(
     so2_from_angle(v[1]),
     v[2:3],
