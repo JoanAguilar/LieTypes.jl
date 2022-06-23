@@ -52,9 +52,10 @@ end
 
 Base.one(q::SE2{DualComplex{T}}) where {T<:Number} = SE2{DualComplex{T}}(
     DualComplex(one(T)))
-Base.one(T::Type{<:SE2}) = T(one(DualComplex))
-Base.one(T::Type{SE2{DualComplex{R}}}) where {R<:Number} = T(DualComplex(
-    one(R)))
+Base.one(T::Type{SE2}) = T(one(DualComplex))
+Base.one(T::Type{SE2{DualComplex}}) = T(one(DualComplex))
+Base.one(T::Type{SE2{DualComplex{R}}}) where {R<:Number} = T(
+    one(DualComplex{R}))
 
 # Selectors
 dual_complex(q::SE2) = q.dc

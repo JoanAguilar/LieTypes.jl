@@ -110,7 +110,8 @@ end
 
 Base.one(q::SO3{Quaternion{T}}) where {T<:Number} = SO3{Quaternion{T}}(
     Quaternion(one(T)))
-Base.one(T::Type{<:SO3}) = T(one(Quaternion))
+Base.one(T::Type{SO3}) = T(one(Quaternion))
+Base.one(T::Type{SO3{Quaternion}}) = T(one(Quaternion))
 Base.one(T::Type{SO3{Quaternion{R}}}) where {R<:Number} = T(Quaternion(one(R)))
 
 # Selectors
