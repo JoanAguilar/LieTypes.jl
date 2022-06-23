@@ -91,6 +91,13 @@ Base.:\(u::Complex, q::Quaternion) = /(q, u)
 Base.:\(p::Quaternion, v::Complex) = /(v, p)
 Base.:(==)(p::Quaternion, q::Quaternion) =
     q.s == p.s && q.i == p.i && q.j == p.j && q.k == p.k
+Base.:(==)(u::Real, q::Quaternion) = (==)(Quaternion(u), q)
+Base.:(==)(p::Quaternion, v::Real) = (==)(v, p)
+Base.:(==)(u::Complex, q::Quaternion) = (==)(Quaternion(u), q)
+Base.:(==)(p::Quaternion, v::Complex) = (==)(v, p)
+Base.isequal(p::Quaternion, q::Quaternion) =
+    isequal(p.s, q.s) && isequal(p.i, q.i) && isequal(p.j, q.j) &&
+    isequal(p.k, q.k)
 # Using `abs` as `norm`, and ignoring `p`, matches the behavior of `Complex`.
 LA.norm(q::Quaternion, p::Real=2) = abs(q)
 LA.normalize(q::Quaternion) = q / abs(q)
