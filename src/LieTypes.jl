@@ -3,8 +3,19 @@ module LieTypes
 import LinearAlgebra as LA
 
 # Support types and methods
-export DualComplex, Quaternion
-export scalar, abcd, sijk, vector, dual, iscomplex
+export DualComplex, Quaternion, Dual
+export
+    scalar,
+    abcd,
+    sijk,
+    vector,
+    dual,
+    iscomplex,
+    du,
+    ϵ,
+    truereal,
+    redu,
+    innerconj
 
 # Types
 export LieGroup
@@ -44,6 +55,7 @@ export
 
 include("numbers/dualcomplex.jl")
 include("numbers/quaternion.jl")
+include("numbers/dual.jl")
 include("abstract.jl")
 include("scalar.jl")
 include("vector.jl")
