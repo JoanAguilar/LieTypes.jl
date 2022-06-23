@@ -1,4 +1,4 @@
-struct Quaternion{T<:Number} <: Number
+struct Quaternion{T<:Real} <: Number
     s::T
     i::T
     j::T
@@ -11,23 +11,23 @@ function Quaternion(
             i::T=zero(T),
             j::T=zero(T),
             k::T=zero(T)
-        ) where {T<:Number}
+        ) where {T<:Real}
     return Quaternion{T}(s, i, j, k)
 end
 
-Quaternion(c::Complex{T}) where {T<:Number} = Quaternion{T}(
+Quaternion(c::Complex{T}) where {T<:Real} = Quaternion{T}(
     real(c),
     imag(c),
     zero(T),
     zero(T))
-Base.zero(T::Type{Quaternion{R}}) where {R<:Number} = T(
+Base.zero(T::Type{Quaternion{R}}) where {R<:Real} = T(
     zero(R),
     zero(R),
     zero(R),
     zero(R))
 Base.zero(T::Type{Quaternion}) = T(0)
 Base.zero(q::T) where {T<:Quaternion} = zero(T)
-Base.one(T::Type{Quaternion{R}}) where {R<:Number} = T(
+Base.one(T::Type{Quaternion{R}}) where {R<:Real} = T(
     one(R),
     zero(R),
     zero(R),
@@ -38,7 +38,7 @@ Base.one(q::T) where {T<:Quaternion} = one(T)
 # Selectors
 scalar(q::Quaternion) = q.s
 Base.real(q::Quaternion) = scalar(q)
-Base.complex(q::Quaternion{T}) where {T<:Number} = Complex{T}(q.s, q.i)
+Base.complex(q::Quaternion{T}) where {T<:Real} = Complex{T}(q.s, q.i)
 sijk(q::Quaternion) = (q.s, q.i, q.j, q.k)
 Base.imag(q::Quaternion) = q.i
 vector(q::Quaternion) = [q.i, q.j, q.k]
