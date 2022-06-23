@@ -1,4 +1,4 @@
-struct DualComplex{T<:Number} <: Number
+struct DualComplex{T<:Real} <: Number
     a::T
     b::T
     c::T
@@ -11,23 +11,23 @@ function DualComplex(
             b::T=zero(T),
             c::T=zero(T),
             d::T=zero(T)
-        ) where {T<:Number}
+        ) where {T<:Real}
     return DualComplex{T}(a, b, c, d)
 end
 
-DualComplex(c::Complex{T}) where {T<:Number} = DualComplex{T}(
+DualComplex(c::Complex{T}) where {T<:Real} = DualComplex{T}(
     real(c),
     imag(c),
     zero(T),
     zero(T))
-Base.zero(T::Type{DualComplex{R}}) where {R<:Number} = T(
+Base.zero(T::Type{DualComplex{R}}) where {R<:Real} = T(
     zero(R),
     zero(R),
     zero(R),
     zero(R))
 Base.zero(T::Type{DualComplex}) = T(0)
 Base.zero(dc::T) where {T<:DualComplex} = zero(T)
-Base.one(T::Type{DualComplex{R}}) where {R<:Number} = T(
+Base.one(T::Type{DualComplex{R}}) where {R<:Real} = T(
     one(R),
     zero(R),
     zero(R),
@@ -38,7 +38,7 @@ Base.one(dc::T) where {T<:DualComplex} = one(T)
 # Selectors
 scalar(dc::DualComplex) = dc.a
 Base.real(dc::DualComplex) = scalar(dc)
-Base.complex(dc::DualComplex{T}) where {T<:Number} = Complex{T}(dc.a, dc.b)
+Base.complex(dc::DualComplex{T}) where {T<:Real} = Complex{T}(dc.a, dc.b)
 abcd(dc::DualComplex) = (dc.a, dc.b, dc.c, dc.d)
 Base.imag(dc::DualComplex) = dc.b
 vector(dc::DualComplex) = [dc.b, dc.c, dc.d]
