@@ -3,12 +3,27 @@ struct Dual{T<:Number} <:Number
     d::T
 end
 
+function Base.promote_rule(
+            ::Type{<:Dual{S}},
+            ::Type{<:Dual{U}}
+        ) where {S<:Number, U<:Number}
+    return Dual{promote_type(S, U)}
+end
+
+function Base.promote_rule(
+            T::Type{<:Real},
+            ::Type{<:Dual{S}}
+        ) where {S<:Number}
+    return Dual{promote_type(T, S)}
+end
+
 # Constructors
 Dual(r::T; d::T=zero(T)) where {T<:Number} = Dual{T}(r, d)
-Base.zero(T::Type{Dual{R}}) where{R<:Number} = Dual{R}(zero(R), zero(R))
+Dual(r::Number, d::Number) = Dual(promote(r, d)...)
+Base.zero(T::Type{Dual{R}}) where{R<:Number} = T(zero(R), zero(R))
 Base.zero(T::Type{Dual}) = T(0)
 Base.zero(n::T) where{T<:Dual} = zero(T)
-Base.one(T::Type{Dual{R}}) where{R<:Number} = Dual{R}(one(R), zero(R))
+Base.one(T::Type{Dual{R}}) where{R<:Number} = T(one(R), zero(R))
 Base.one(T::Type{Dual}) = T(1)
 Base.one(n::T) where{T<:Dual} = one(T)
 du = Dual(0, 1)
