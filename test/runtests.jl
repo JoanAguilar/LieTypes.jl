@@ -12,4 +12,5 @@ import LinearAlgebra as LA
     @testset "SO2" begin include("so2.jl") end
     @testset "SE2" begin include("se2.jl") end
     @testset "SO3" begin include("so3.jl") end
+    @testset "SE3" begin include("se3.jl") end
 end
