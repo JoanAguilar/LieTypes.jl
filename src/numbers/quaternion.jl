@@ -5,6 +5,20 @@ struct Quaternion{T<:Real} <: Number
     k::T
 end
 
+function Base.promote_rule(
+            ::Type{<:Quaternion{S}},
+            ::Type{<:Quaternion{U}}
+        ) where {S<:Real, U<:Real}
+    return Quaternion{promote_type(S, U)}
+end
+
+function Base.convert(
+            T::Type{Quaternion{R}},
+            x::Quaternion{S}
+        ) where {R<:Real, S<:Real}
+    return T(promote(x.s, x.i, x.j, x.k)...)
+end
+
 # Constructors
 function Quaternion(
             s::T;
