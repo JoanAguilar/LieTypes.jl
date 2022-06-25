@@ -90,46 +90,41 @@ end
 @testset "abs2" begin
     @test abs2(zero(Dual)) == 0
     @test abs2(one(Dual)) == 1
-    @test abs2(Dual(2, 3)) == 13
-    @test abs2(Dual(Complex(1, 2), Complex(3, 4))) == 30
-    @test abs2(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))) == 204
-end
-
-@testset "abs" begin
-    @test abs(zero(Dual)) == 0
-    @test abs(one(Dual)) == 1
-    @test abs(Dual(2, 3)) == √13
-    @test abs(Dual(Complex(1, 2), Complex(3, 4))) == √30
-    @test abs(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))) == √204
+    @test abs2(Dual(2, 3)) == Dual(4, 12)
+    @test abs2(Dual(Complex(1, 2), Complex(3, 4))) == Dual(5, 22)
+    @test (==)(
+        abs2(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
+        Dual(30, 140))
 end
 
 @testset "conj" begin
     test_values(conj(zero(Dual)), 0, 0)
     test_values(conj(one(Dual)), 1, 0)
-    test_values(conj(Dual(2, 3)), 2, -3)
+    test_values(conj(Dual(2, 3)), 2, 3)
     test_values(
         conj(Dual(Complex(1, 2), Complex(3, 4))),
+        Complex(1, -2),
+        Complex(3, -4))
+    test_values(
+        conj(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
+        Quaternion(1, -2, -3, -4),
+        Quaternion(5, -6, -7, -8))
+end
+
+@testset "dual conj" begin
+    test_values(dualconj(zero(Dual)), 0, 0)
+    test_values(dualconj(one(Dual)), 1, 0)
+    test_values(dualconj(Dual(2, 3)), 2, -3)
+    test_values(
+        dualconj(Dual(Complex(1, 2), Complex(3, 4))),
         Complex(1, 2),
         Complex(-3, -4))
     test_values(
-        conj(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
+        dualconj(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
         Quaternion(1, 2, 3, 4),
         Quaternion(-5, -6, -7, -8))
 end
 
-@testset "inner conj" begin
-    test_values(innerconj(zero(Dual)), 0, 0)
-    test_values(innerconj(one(Dual)), 1, 0)
-    test_values(innerconj(Dual(2, 3)), 2, 3)
-    test_values(
-        innerconj(Dual(Complex(1, 2), Complex(3, 4))),
-        Complex(1, -2),
-        Complex(3, -4))
-    test_values(
-        innerconj(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
-        Quaternion(1, -2, -3, -4),
-        Quaternion(5, -6, -7, -8))
-end
 
 @testset "inv" begin
     test_values(inv(zero(Dual)), Inf, NaN, comp=isequal)
@@ -544,26 +539,4 @@ end
     @test !isapprox(
         Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8)),
         Dual(Quaternion(1.1, 2.1, 3.1, 4.1), Quaternion(5.1, 6.1, 7.1, 8.1)))
-end
-
-@testset "norm" begin
-    @test LA.norm(Dual(1, 2)) == abs(Dual(1, 2))
-    @test LA.norm(Dual(1, 2), 1) == abs(Dual(1, 2))
-    @test LA.norm(Dual(1, 2), 3) == abs(Dual(1, 2))
-    @test (==)(
-        LA.norm(Dual(Complex(1, 2), Complex(3, 4))),
-        abs(Dual(Complex(1, 2), Complex(3, 4))))
-    @test (==)(
-        LA.norm(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))),
-        abs(Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8))))
-end
-
-@testset "normalize" begin
-    @test LA.norm(LA.normalize(Dual(1, 2))) ≈ 1
-    @test LA.norm(LA.normalize(Dual(Complex(1, 2), Complex(3, 4)))) ≈ 1
-    @test isapprox(
-        LA.norm(
-            LA.normalize(
-                Dual(Quaternion(1, 2, 3, 4), Quaternion(5, 6, 7, 8)))),
-        1)
 end
