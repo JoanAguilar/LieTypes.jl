@@ -37,10 +37,9 @@ dual(n::Dual) = n.d
 Base.isreal(n::Dual) = n.d == zero(n.d) && isreal(n.r)
 
 # Operators
-Base.abs2(n::Dual) = abs2(n.r) + abs2(n.d)
-Base.abs(n::Dual) = sqrt(abs2(n))
-Base.conj(n::T) where {T<:Dual} = T(n.r, -n.d)
-innerconj(n::T) where {T<:Dual} = T(conj(n.r), conj(n.d))
+Base.abs2(n::Dual) = n * conj(n)
+Base.conj(n::T) where {T<:Dual} = T(conj(n.r), conj(n.d))
+dualconj(n::T) where {T<:Dual} = T(n.r, -n.d)
 
 function Base.inv(n::Dual{R}) where {R<:Number}
     inv_real = inv(real(n))
@@ -64,6 +63,8 @@ Base.:\(m::Dual, n::Dual) = *(inv(m), n)
 Base.:\(m::Number, n::Dual) = \(Dual(m), n)
 Base.:\(m::Dual, n::Number) = \(m, Dual(n))
 Base.:(==)(m::Dual, n::Dual) = m.r == n.r && m.d == n.d
+Base.:(==)(m::Dual, n::Number) = (==)(m, Dual(n))
+Base.:(==)(m::Number, n::Dual) = (==)(n, m)
 
 function dualrtoldefault(m::Dual, n::Dual, atol::Real)
     rtol = max(
@@ -71,6 +72,11 @@ function dualrtoldefault(m::Dual, n::Dual, atol::Real)
         Base.rtoldefault(typeof(truereal(n))))
     return atol > 0 ? zero(rtol) : rtol
 end
+
+dualrtoldefault(m::Number, n::Dual, atol::Real) =
+    dualrtoldefault(Dual(m), n, atol)
+dualrtoldefault(m::Dual, n::Number, atol::Real) =
+    dualrtoldefault(m, Dual(n), atol)
 
 function Base.isapprox(
         m::Dual,
@@ -83,6 +89,19 @@ function Base.isapprox(
         isapprox(m.d, n.d, atol=atol, rtol=rtol, nans=nans, norm=norm)
 end
 
-# Using `abs` as `norm`, and ignoring `p`, matches the behavior of `Complex`.
-LA.norm(n::Dual, p::Real=2) = abs(n)
-LA.normalize(n::Dual) = n / abs(n)
+Base.isapprox(
+    m::Number,
+    n::Dual;
+    atol::Real=0,
+    rtol::Real=dualrtoldefault(m, n, atol),
+    nans::Bool=false,
+    norm::Function=abs
+) = isapprox(Dual(m), n, atol=atol, rtol=rtol, nans=nans, norm=norm)
+Base.isapprox(
+    m::Dual,
+    n::Number;
+    atol::Real=0,
+    rtol::Real=dualrtoldefault(m, n, atol),
+    nans::Bool=false,
+    norm::Function=abs
+) = isapprox(m, Dual(n), atol=atol, rtol=rtol, nans=nans, norm=norm)
