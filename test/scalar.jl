@@ -29,7 +29,6 @@ end
         @test one(LieScalar(n)).s == 0
     end
 
-    @test one(LieScalar).s == 0
     for T = (Int64, Float64, Complex)
         @test one(LieScalar{T}).s == 0
     end
@@ -45,8 +44,8 @@ end
     for n = numbers
         @test (one(LieScalar(n)) * LieScalar(n)).s == n
         @test (LieScalar(n) * one(LieScalar(n))).s == n
-        @test (one(LieScalar) * LieScalar(n)).s == n
-        @test (LieScalar(n) * one(LieScalar)).s == n
+        @test (one(LieScalar{typeof(n)}) * LieScalar(n)).s == n
+        @test (LieScalar(n) * one(LieScalar{typeof(n)})).s == n
     end
 
     for p = pairs
