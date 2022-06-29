@@ -5,6 +5,20 @@ struct DualComplex{T<:Real} <: Number
     d::T
 end
 
+function Base.promote_rule(
+            ::Type{<:DualComplex{R}},
+            ::Type{<:DualComplex{T}}
+        ) where {R<:Real, T<:Real}
+    return DualComplex{promote_type(R, T)}
+end
+
+function Base.convert(
+            T::Type{DualComplex{R}},
+            x::DualComplex{S}
+        ) where {R<:Real, S<:Real}
+    return T(promote(x.a, x.b, x.c, x.d)...)
+end
+
 # Constructors
 function DualComplex(
             a::T;

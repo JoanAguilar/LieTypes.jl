@@ -17,6 +17,13 @@ function Base.promote_rule(
     return Dual{promote_type(T, S)}
 end
 
+function Base.convert(
+            T::Type{Dual{R}},
+            x::Dual{S}
+        ) where {R<:Number, S<:Number}
+    return T(promote(x.r, x.d)...)
+end
+
 # Constructors
 Dual(r::T; d::T=zero(T)) where {T<:Number} = Dual{T}(r, d)
 Dual(r::Number, d::Number) = Dual(promote(r, d)...)
