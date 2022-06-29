@@ -67,15 +67,15 @@ end
 @testset "exponential map" begin
     for n = numbers
         a = fill(n)
-        @test exp(LieScalar, a).s == n
+        @test exp(LieScalar{typeof(n)}, a).s == n
     end
 end
 
 @testset "logarithm" begin
     for n = numbers
-        l = LieScalar(n)
+        l = LieScalar{typeof(n)}(n)
         @test log(l)[] == n
-        @test log(exp(LieScalar, fill(n)))[] == n
-        @test exp(LieScalar, log(l)).s == n
+        @test log(exp(LieScalar{typeof(n)}, fill(n)))[] == n
+        @test exp(LieScalar{typeof(n)}, log(l)).s == n
     end
 end
