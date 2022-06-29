@@ -45,7 +45,9 @@ bad_dual_complexes = (
     DualComplex(0, c=1, d=2))
 dual_complexes = (good_dual_complexes..., bad_dual_complexes...)
 
-good_matrices = map(ad -> angle_disp_to_matrix(ad.angle, ad.disp), angles_disps)
+good_matrices = map(
+    ad -> angle_disp_to_matrix(ad.angle, ad.disp),
+    angles_disps)
 bad_matrices = (
     [1 1 2;
      0 1 3;
@@ -124,10 +126,6 @@ end
     end
 
     @test one(SE2).dc == one(DualComplex) 
-    @test one(SE2{DualComplex}).dc == one(DualComplex)
-    for T = (Int64, Float64)
-        @test one(SE2{DualComplex{T}}).dc == one(DualComplex)
-    end
 end
 
 @testset "dual_complex" begin

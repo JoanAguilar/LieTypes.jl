@@ -61,10 +61,6 @@ end
     end
 
     @test one(SO2).c == one(Complex)
-    @test one(SO2{Complex}).c == one(Complex)
-    for T = (Int64, Float64)
-        @test one(SO2{Complex{T}}).c == one(Complex)
-    end
 end
 
 @testset "complex" begin

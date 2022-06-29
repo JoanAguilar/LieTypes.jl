@@ -1,5 +1,5 @@
-struct SE3{T<:Dual{<:Quaternion}} <: LieGroup
-    dq::T
+struct SE3 <: LieGroup
+    dq::Dual{Quaternion{Float64}}
 end
 
 # Constructors
@@ -54,12 +54,8 @@ function se3_from_so3_disp(
     return SE3(Dual(qr, 0.5 * t * qr))
 end
 
-Base.one(q::SE3{Dual{Quaternion{T}}}) where {T<:Real} =
-    SE3{Dual{Quaternion{T}}}(one(Dual{Quaternion{T}}))
-Base.one(T::Type{SE3}) = T(one(Dual{Quaternion}))
-Base.one(T::Type{SE3{Dual{Quaternion}}}) = T(one(Dual{Quaternion}))
-Base.one(T::Type{SE3{Dual{Quaternion{R}}}}) where {R<:Real} =
-    T(one(Dual{Quaternion{R}}))
+Base.one(q::SE3) = SE3(one(Dual{Quaternion{Float64}}))
+Base.one(T::Type{SE3}) = T(one(Dual{Quaternion{Float64}}))
 
 # Selectors
 dual_quaternion(q::SE3) = q.dq
@@ -78,11 +74,11 @@ disp(q::SE3) = vector(2 * dual(q.dq) * conj(real(q.dq)))
 
 # Operators
 Base.:*(q::SE3, p::SE3) = SE3(q.dq * p.dq)
-Base.inv(q::T) where {T<:SE3} = T(conj(q.dq))
+Base.inv(q::SE3) = SE3(conj(q.dq))
 # The Lie algebra is represented as a six-element vector, containing three 
 # elements corresponding to the rotation vector, and three elements
 # corresponding to the translation vector, in this order.
-Base.exp(T::Type{<:SE3}, v::Vector{<:Real}) = se3_from_so3_disp(
+Base.exp(T::Type{SE3}, v::Vector{<:Real}) = se3_from_so3_disp(
     so3_from_rotvec(v[1:3]),
     v[4:6],
     checks=false)

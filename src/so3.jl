@@ -1,5 +1,5 @@
-struct SO3{T<:Quaternion} <: LieGroup
-    q::T
+struct SO3 <: LieGroup
+    q::Quaternion{Float64}
 end
 
 # Constructors
@@ -108,11 +108,8 @@ function so3_from_rotvec(v::Vector{<:Real}; checks::Bool=true)
     end
 end
 
-Base.one(q::SO3{Quaternion{T}}) where {T<:Number} = SO3{Quaternion{T}}(
-    Quaternion(one(T)))
-Base.one(T::Type{SO3}) = T(one(Quaternion))
-Base.one(T::Type{SO3{Quaternion}}) = T(one(Quaternion))
-Base.one(T::Type{SO3{Quaternion{R}}}) where {R<:Number} = T(Quaternion(one(R)))
+Base.one(q::SO3) = SO3(one(Quaternion{Float64}))
+Base.one(T::Type{SO3}) = SO3(one(Quaternion{Float64}))
 
 # Selectors
 quaternion(q::SO3) = q.q
@@ -164,8 +161,8 @@ end
 
 # Operators
 Base.:*(q::SO3, p::SO3) = SO3(q.q * p.q)
-Base.inv(q::T) where {T<:SO3} = T(conj(q.q))
+Base.inv(q::SO3) = SO3(conj(q.q))
 # The Lie algebra is represented as a three-element vector, containing the
 # rotation vector of the transformation.
-Base.exp(T::Type{<:SO3}, v::Vector{<:Real}) = so3_from_rotvec(v, checks=false)
+Base.exp(T::Type{SO3}, v::Vector{<:Real}) = so3_from_rotvec(v, checks=false)
 Base.log(q::SO3) = rotvec(q)

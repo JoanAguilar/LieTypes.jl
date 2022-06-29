@@ -132,10 +132,6 @@ end
     end
 
     @test one(SE3).dq == one(Dual{Quaternion}) 
-    @test one(SE3{Dual{Quaternion}}).dq == one(Dual{Quaternion})
-    for T = (Int64, Float64)
-        @test one(SE3{Dual{Quaternion{T}}}).dq == one(Dual{Quaternion})
-    end
 end
 
 @testset "dual_quaternion" begin

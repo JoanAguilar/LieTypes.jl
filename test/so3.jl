@@ -148,10 +148,6 @@ end
     end
 
     @test one(SO3).q == one(Quaternion)
-    @test one(SO3{Quaternion}).q == one(Quaternion)
-    for T = (Int64, Float64)
-        @test one(SO3{Quaternion{T}}).q == one(Quaternion)
-    end
 end
 
 @testset "quaternion" begin

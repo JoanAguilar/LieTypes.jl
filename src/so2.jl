@@ -1,5 +1,5 @@
-struct SO2{T<:Complex} <: LieGroup
-    c::T
+struct SO2 <: LieGroup
+    c::ComplexF64
 end
 
 # Constructors
@@ -39,10 +39,8 @@ function so2_from_rotmat(r::Matrix{<:Real}; checks::Bool=true)
     return SO2(r[1, 1] + im * r[2, 1])
 end
 
-Base.one(q::SO2{Complex{T}}) where {T<:Number} = SO2{Complex{T}}(
-    Complex(one(T)))
-Base.one(T::Type{<:SO2}) = T(one(Complex))
-Base.one(T::Type{SO2{Complex{R}}}) where {R<:Number} = T(Complex(one(R)))
+Base.one(q::SO2) = SO2(one(ComplexF64))
+Base.one(T::Type{SO2}) = T(one(ComplexF64))
 
 # Selectors
 Base.complex(q::SO2) = q.c
@@ -53,9 +51,9 @@ rotmat(q::SO2) = [
 
 # Operators
 Base.:*(q::SO2, p::SO2) = SO2(q.c * p.c)
-Base.inv(q::T) where {T<:SO2} = T(conj(q.c))
+Base.inv(q::SO2) = SO2(conj(q.c))
 # The Lie algebra is represented as a scalar array, containing the angle of the
 # transformation. The choice of a scalar array rather than a scalar is to keep
 # type consistency with other Lie algebras (all represented by arrays).
-Base.exp(T::Type{<:SO2}, v::Array{<:Real, 0}) = so2_from_angle(v[])
+Base.exp(T::Type{SO2}, v::Array{<:Real, 0}) = so2_from_angle(v[])
 Base.log(q::SO2) = fill(angle(q.c))

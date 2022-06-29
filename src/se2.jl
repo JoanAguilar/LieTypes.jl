@@ -1,5 +1,5 @@
-struct SE2{T<:DualComplex} <: LieGroup
-    dc::T
+struct SE2 <: LieGroup
+    dc::DualComplex{Float64}
 end
 
 # Constructors
@@ -45,17 +45,13 @@ function se2_from_so2_disp(
     θ = angle(r)
     chθ = cos(θ/2)
     shθ = sin(θ/2)
-    dcr = DualComplex(chθ, shθ, shθ, shθ)
-    dcd = DualComplex(one(R), zero(R), -d[2], d[1])
+    dcr = DualComplex{Float64}(chθ, shθ, shθ, shθ)
+    dcd = DualComplex{Float64}(one(R), zero(R), -d[2], d[1])
     return SE2(dcd * dcr)
 end
 
-Base.one(q::SE2{DualComplex{T}}) where {T<:Real} = SE2{DualComplex{T}}(
-    DualComplex(one(T)))
-Base.one(T::Type{SE2}) = T(one(DualComplex))
-Base.one(T::Type{SE2{DualComplex}}) = T(one(DualComplex))
-Base.one(T::Type{SE2{DualComplex{R}}}) where {R<:Real} = T(
-    one(DualComplex{R}))
+Base.one(q::SE2) = SE2(one(DualComplex{Float64}))
+Base.one(T::Type{SE2}) = SE2(one(DualComplex{Float64}))
 
 # Selectors
 dual_complex(q::SE2) = q.dc
@@ -78,11 +74,11 @@ end
 
 # Operators
 Base.:*(q::SE2, p::SE2) = SE2(q.dc * p.dc)
-Base.inv(q::T) where {T<:SE2} = T(conj(q.dc))
+Base.inv(q::SE2) = SE2(conj(q.dc))
 # The Lie algebra is represented as a three-element vector, containing one
 # element corresponding to the rotation angle, and two elements corresponding
 # to the translation vector, in this order.
-Base.exp(T::Type{<:SE2}, v::Vector{<:Real}) = se2_from_so2_disp(
+Base.exp(T::Type{SE2}, v::Vector{<:Real}) = se2_from_so2_disp(
     so2_from_angle(v[1]),
     v[2:3],
     checks=false)
