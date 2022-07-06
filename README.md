@@ -1,5 +1,7 @@
 # LieTypes.jl
 
+[![Tests](https://github.com/JoanAguilar/LieTypes.jl/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/JoanAguilar/LieTypes.jl/actions/workflows/test.yml)
+
 Julia types for Lie groups.
 
 The main goal is for the provided types to allow the writing of Lie-group-agnostic code.
